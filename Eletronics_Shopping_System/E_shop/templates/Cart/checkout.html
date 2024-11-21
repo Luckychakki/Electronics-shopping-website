@@ -1,0 +1,252 @@
+{% extends 'Main/base.html' %}
+{% block content %}
+{% load cart_tag %}
+
+
+<!-- checkout area start -->
+
+<form method="post" action="{% url 'place_order' %}" id="form">
+        {% csrf_token %}
+        <div class="checkout-area pt-100px pb-100px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="billing-info-wrap">
+                            <h3>Billing Details</h3>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="billing-info mb-4">
+                                        <label>First Name</label>
+                                        <input type="text"  value="{{user.first_name}}" name="firstname" id="firstName" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="billing-info mb-4">
+                                        <label>Last Name</label>
+                                        <input type="text" value="{{user.last_name}}" name="lastname" id="lastName" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="billing-select mb-4">
+                                        <label>Country</label>
+                                        <select name="country" id="country">
+                                            <option>Select a country</option>
+                                            <option>India</option>
+                                            <option>UAE</option>
+                                            <option>China</option>
+                                            <option>Bangladesh</option>
+                                            <option>Oman</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="billing-info mb-4">
+                                        <label>Street Address</label>
+                                        <input class="billing-address" name="address" id="address" placeholder="House number and street name" type="text" />
+                                        <input name="address" placeholder="Apartment, suite, unit etc." type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="billing-info mb-4">
+                                        <label>Town / City</label>
+                                        <input type="text" name="city" id="city"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="billing-info mb-4">
+                                        <label>State</label>
+                                        <input type="text" name="state" id="state"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="billing-info mb-4">
+                                        <label>Postcode / ZIP</label>
+                                        <input type="text" name="postcode" id="postcode"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="billing-info mb-4">
+                                        <label>Phone</label>
+                                        <input type="text" name="phone" id="phone"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="billing-info mb-4">
+                                        <label>Email Address</label>
+                                        <input type="text" value="{{user.email}}" name="email" id="email" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checkout-account-toggle open-toggle2 mb-30">
+                                <input placeholder="Email address" type="email" />
+                                <input placeholder="Password" type="password" />
+                                <button class="btn-hover checkout-btn" type="submit">register</button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-5 mt-md-30px mt-lm-30px ">
+                        <div class="your-order-area">
+                            <h3>Your order</h3>
+                            <div class="your-order-wrap gray-bg-4">
+                                <div class="your-order-product-info">
+                                    <div class="your-order-top">
+                                        <ul>
+                                            <li>Product</li>
+                                            <li>Total</li>
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-middle">
+                                        <ul>
+                                            {% for key,value in request.session.cart.items %}
+                                            <li><span class="order-middle-left">{{value.name | truncatewords:3}} X {{value.quantity}}</span> <span
+                                                class="order-price">Rs. {{ value.price|multiply:value.quantity }}</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-bottom">
+                                        <ul>
+                                            <li class="your-order-shipping">Shipping</li>
+                                            <li>Free shipping</li>
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-total">
+                                        <ul>
+                                            <li class="order-total">Total</li>
+                                            <li><input value="                       Rs.{{cart_total_amount}}" name="amount" readonly style="border:none;"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="payment-method">
+                                    <div class="payment-accordion element-mrg">
+                                        <div id="faq" class="panel-group">
+                                            <div class="panel panel-default single-my-account m-0">
+                                                <div class="panel-heading my-account-title">
+                                                    <h4 class="panel-title"><a data-bs-toggle="collapse" href="#my-account-1" class="collapsed" aria-expanded="true">Direct bank transfer</a>
+                                                    </h4>
+                                                </div>
+                                                <div id="my-account-1" class="panel-collapse collapse show" data-bs-parent="#faq">
+                                                    <div class="panel-body">
+                                                        <p>Please send a check to Store Name, Store Street, Store Town,
+                                                            Store State / County, Store Postcode.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default single-my-account m-0">
+                                                <div class="panel-heading my-account-title">
+                                                    <h4 class="panel-title"><a data-bs-toggle="collapse" href="#my-account-2" aria-expanded="false" class="collapsed">Check payments</a></h4>
+                                                </div>
+                                                <div id="my-account-2" class="panel-collapse collapse" data-bs-parent="#faq">
+                                                    <div class="panel-body">
+                                                        <p>Please send a check to Store Name, Store Street, Store Town,
+                                                            Store State / County, Store Postcode.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default single-my-account m-0">
+                                                <div class="panel-heading my-account-title">
+                                                    <h4 class="panel-title"><a data-bs-toggle="collapse" href="#my-account-3">Cash on delivery</a></h4>
+                                                </div>
+                                                <div id="my-account-3" class="panel-collapse collapse" data-bs-parent="#faq">
+                                                    <div class="panel-body">
+                                                        <p>Please send a check to Store Name, Store Street, Store Town,
+                                                            Store State / County, Store Postcode.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Place-order mt-25">
+                                <a class="btn-hover" href="#"><button type="submit" class="text-light">CONTINUE</button></a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+        <!-- checkout area end -->
+ <script>
+        // Ensure data is captured on form submission
+        const form = document.getElementById('form');
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const address = document.getElementById('address');
+        const country = document.getElementById('country');
+        const city = document.getElementById('city');
+        const state = document.getElementById('state');
+        const postcode = document.getElementById('postcode');
+        const phone = document.getElementById('phone');
+        const email = document.getElementById('email');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();  // Prevent default form submission (page reload)
+
+            // Retrieve input values
+            const firstNameValue = firstName.value;
+            const lastNameValue = lastName.value;
+            const addressValue = address.value;
+            const countryValue = country.value;
+            const cityValue = city.value;
+            const stateValue = state.value;
+            const postcodeValue = postcode.value;
+            const phoneValue = phone.value;
+            const emailValue = email.value;
+
+            // Check if required fields are filled
+            if (firstNameValue && lastNameValue && addressValue && countryValue && cityValue && stateValue && postcodeValue && phoneValue && emailValue) {
+                // Store data in localStorage
+                localStorage.setItem('first-name', firstNameValue);
+                localStorage.setItem('last-name', lastNameValue);
+                localStorage.setItem('address', addressValue);
+                localStorage.setItem('country', countryValue);
+                localStorage.setItem('city', cityValue);
+                localStorage.setItem('state', stateValue);
+                localStorage.setItem('postcode', postcodeValue);
+                localStorage.setItem('phone', phoneValue);
+                localStorage.setItem('email', emailValue);
+
+                // Optionally log the stored data for debugging
+                console.log('Data stored in localStorage:', {
+                    firstName: localStorage.getItem('first-name'),
+                    lastName: localStorage.getItem('last-name'),
+                    address: localStorage.getItem('address'),
+                    country: localStorage.getItem('country'),
+                    city: localStorage.getItem('city'),
+                    state: localStorage.getItem('state'),
+                    postcode: localStorage.getItem('postcode'),
+                    phone: localStorage.getItem('phone'),
+                    email: localStorage.getItem('email')
+                });
+                // JavaScript to save data into Django session
+                    fetch('/save-order-data/', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrf_token,  // Add CSRF token for Django
+                     },
+                    body: JSON.stringify({
+                          'first-name': localStorage.getItem('first-name'),
+                         'last-name': localStorage.getItem('last-name'),
+                        'address': localStorage.getItem('address'),
+                        'country': localStorage.getItem('country'),
+                        'city': localStorage.getItem('city'),
+                        'state': localStorage.getItem('state'),
+                        'postcode': localStorage.getItem('postcode'),
+                        'phone': localStorage.getItem('phone'),
+                        'email': localStorage.getItem('email'),
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                     window.location.href = "/cart/checkout/placeorder";
+                });
+
+    </script>
+
+{% endblock %}

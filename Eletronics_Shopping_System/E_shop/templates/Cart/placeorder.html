@@ -1,0 +1,118 @@
+{% extends 'Main/base.html' %}
+{% block content %}
+{% load cart_tag %}
+
+<!-- Cart Area Start -->
+        <div class="cart-main-area pt-100px pb-100px">
+            <div class="container">
+                <h3 class="cart-page-title">Your Order</h3>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                        <form>
+                            {% csrf_token %}
+                            <div class="table-content table-responsive cart-table-content">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Product Name</th>
+                                            <th>Until Price</th>
+                                            <th>Qty</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for key,value in request.session.cart.items %}
+                                        <tr>
+                                            <td class="product-thumbnail">
+                                                <a href="#"><img class="img-responsive ml-15px" src=" {{value.image}}" alt="" /></a>
+                                            </td>
+                                            <td class="product-name"><a href="#">{{value.name | truncatewords:10}}</a></td>
+                                            <td class="product-price-cart"><span class="amount">Rs.  {{value.price}}</span></td>
+                                            <td class="product-quantity">
+
+                                                <div class="cart_quantity_button">
+                                                    <a>{{value.quantity}}</a>
+                                                </div>
+
+                                            </td>
+                                            <td class="product-subtotal">Rs. {{ value.price|multiply:value.quantity }}</td>
+
+                                        </tr>
+                                        {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="cart-shiping-update-wrapper">
+                                        <div class="cart-shiping-update">
+                                            <a href="{% url 'success' %}">PLACE ORDER</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+<!---
+                            <div class="dashboard_tab_button" data-aos="fade-up" data-aos-delay="0">
+                                <p id="res">The following addresses will be used on the checkout page by default.</p>
+                                <h5 class="billing-address">Billing address</h5>
+                                <div>firstname : <span id="first-name"></span></div>
+                                <div>lastname : <span id="last-name"></span></div>
+                                <div>Address : <span id="address"></span></div>
+                                <div>Country : <span id="country"></span></div>
+                                <div>City : <span id="city"></span></div>
+                                <div>State : <span id="state"></span></div>
+                                <div>Postcode : <span id="postcode"></span></div>
+                                <div>Phone : <span id="phone"></span></div>
+                                <div>Email : <span id="email"></span></div>
+
+                            </div>---->
+
+
+
+
+
+
+                        </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Cart Area End -->
+<script>
+        // Ensure data is retrieved after page load
+        window.addEventListener('load', function () {
+            // Retrieve values from localStorage
+            const firstName = localStorage.getItem('first-name');
+            const lastName = localStorage.getItem('last-name');
+            const address = localStorage.getItem('address');
+            const country = localStorage.getItem('country');
+            const city = localStorage.getItem('city');
+            const state = localStorage.getItem('state');
+            const postcode = localStorage.getItem('postcode');
+            const phone = localStorage.getItem('phone');
+            const email = localStorage.getItem('email');
+
+            // Debug: Log the retrieved values
+            console.log('Retrieved from localStorage:', { firstName, lastName, address, country, city, state, postcode, phone, email });
+
+            // Display the values in their respective elements or show 'Not Provided' if not available
+            document.getElementById('first-name').textContent = firstName || 'Not Provided';
+            document.getElementById('last-name').textContent = lastName || 'Not Provided';
+            document.getElementById('address').textContent = address || 'Not Provided';
+            document.getElementById('country').textContent = country || 'Not Provided';
+            document.getElementById('city').textContent = city || 'Not Provided';
+            document.getElementById('state').textContent = state || 'Not Provided';
+            document.getElementById('postcode').textContent = postcode || 'Not Provided';
+            document.getElementById('phone').textContent = phone || 'Not Provided';
+            document.getElementById('email').textContent = email || 'Not Provided';
+        });
+    </script>
+
+{% endblock %}
